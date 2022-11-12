@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Teaching CSS Animations</title>
+    <meta name="viewport" content="width=device-width;initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet" />
+    <style>
+      @keyframes slide-1 {
+        0% {
+          opacity: 0.0;
+        }
+
+        100% {
+          opacity: 1.0;
+        }
+      }
+
+      @keyframes slide-1-h3 {
+        0% {
+          height: 0;
+        }
+
+        100% {
+          height: 64px;
+        }
+      }
+
+      @keyframes box-tl {
+        0% {
+          bottom: 100%;
+          right: 100%;
+        }
+
+        100% {
+          bottom: 0;
+          right: 0;
+        }
+      }
+
+      @keyframes box-br {
+        0% {
+          top: 100%;
+          left: 100%;
+        }
+
+        100% {
+          top: 0;
+          left: 0;
+        }
+      }
+
+      * {
+        animation-fill-mode: forwards !important;
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        margin: 0;
+      }
+
+      #title, #subtitle {
+        transition: color 0.4s;
+      }
+
+      #slide-1 {
+        animation: slide-1 0.5s ease 0.3s;
+        width: 100%;
+        text-align: center;
+        transition: text-align 0.2s ease-out;
+        opacity: 0;
+        color: #fff;
+      }
+
+      #slide-1 > h3 {
+        height: 0;
+        animation: slide-1-h3 0.3s ease-out 0.9s;
+        overflow: hidden;
+      }
+
+      #canvas {
+        height: 0;
+        transition: height 0.75s;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      #td, #sl, #an {
+        opacity: 0;
+        transition: opacity 0.15s, margin-left 0.3s, margin-right 0.3s;
+        white-space: nowrap;
+      }
+
+      #sl, #an {
+        margin-top: 30px;
+      }
+
+      #box {
+        position: relative;
+        padding: 30px;
+        opacity: 0;
+        transition: opacity 0.15s, transform 0.3s, height 0.3s, top 0.25s, left 0.25s, bottom 0.25s, right 0.25s;
+        transform: scale(0.8, 0.8);
+        font-size: 1.5em;
+        max-width: 90vw;
+        box-sizing: border-box;
+        display: none;
+      }
+
+      #box.show {
+        transform: scale(1.0, 1.0);
+        opacity: 1.0;
+      }
+
+      #box.show::after {
+        content: ' ';
+        border-style: solid;
+        position: absolute;
+        border-color: white;
+        border-width: 2px 0 0 2px;
+        top: 0;
+        left: 0;
+        bottom: 100%;
+        right: 100%;
+        animation: box-tl 0.3s ease-out;
+        animation-fill-mode: forwards;
+        transition: border-width 0.15s;
+      }
+
+      #box.show::before {
+        content: ' ';
+        border-style: solid;
+        position: absolute;
+        border-color: white;
+        border-width: 0 2px 2px 0;
+        top: 100%;
+        left: 100%;
+        bottom: 0;
+        right: 0;
+        animation: box-br 0.3s ease-out;
+        animation-fill-mode: forwards;
+        transition: border-width 0.15s;
+      }
+
+      #box.show.scrolled::before, #box.show.scrolled::after {
+        border-width: 0;
+      }
+
+      html, body {
+        height: 100%;
+        margin: 0;
+        font-family: 'Raleway', sans-serif;
+        overflow-y: hidden;
+        overflow-x: hidden;
+        font-size: 4vmin;
+      }
+
+      section {
+        height: 100vh;
+      }
+
+      #ct1 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
+
+      #ct2 {
+        background-image: radial-gradient(circle at 80% 80%, rgb(220, 120, 60) 0%, rgb(207, 85, 16) 50%);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #ct2 > div {
+        padding: 30px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      #ct2 img {
+        border: 2px solid #ccc;
+        box-shadow: 3px 3px 10px -1px rgba(0, 0, 0, 0.8);
+        filter: blur(10px);
+        transition: filter 0.5s;
+      }
+
+      #ct2 img.unblur {
+        filter: blur(0);
+      }
+
+      body {
+        transition: background-color 0.25s;
+        background-color: #333;
+      }
+
+      #hd {
+        overflow: hidden;
+        max-height: 20vw;
+        transition: max-height 0.3s;
+        box-sizing: border-box;
+      }
+
+      #nxt {
+        max-height: 0;
+        transition: max-height 0.3s;
+        overflow: hidden;
+        box-sizing: border-box;
+      }
+
+      #obo1, #obo2, #obo3 {
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+
+      #sum {
+        max-width: 90vw;
+        box-sizing: border-box;
+        padding: 30px;
+        font-size: 1.5em;
+        transition: transform 0.25s ease, opacity 0.25s;
+        transform: skew(30deg, 30deg);
+        opacity: 0;
+        display: none;
+      }
+
+      #sum.show {
+        opacity: 1.0;
+        transform: skew(0, 0);
+      }
+
+      #scrdown {
+        bottom: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        display: inline-block;
+        position: absolute;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 1s;
+        cursor: pointer;
+        font-size: 2em;
+      }
+
+      a, a:visited {
+        color: #fff;
+      }
+    </style>
+    <script>
+    let i = 0;
+    
+    const gid = document.getElementById.bind(document);
+    const st = window.setTimeout.bind(window);
+
+    const scroll_to_bottom = () => {
+      document.documentElement.style.overflowY = "auto";
+      document.body.style.overflowY = "auto";
+
+      st(() => {
+        gid("box").classList.add("scrolled");
+
+        document.body.scrollTo({
+          top: window.innerHeight,
+          behavior: 'smooth'
+        });
+
+        st(() => {
+          gid("img").classList.add("unblur");
+        }, 500);
+      }, 50);
+    };
+
+    const init_and_run = () => {
+      window.setTimeout(run_and_set, 2000);
+      gid("scrdown").addEventListener("click", scroll_to_bottom);
+      window.addEventListener("resize", resz);
+    };
+
+    const run_and_set = () => {
+      pts[i][0]();
+      window.setTimeout(run_and_set, pts[i++][1]);
+    };
+
+    const resz = () => {
+      gid("canvas").style.height = (window.innerHeight * 0.5) + "px";
+    }
+
+    const pts1 = () => {
+      gid("canvas").style.height = (window.innerHeight * 0.5) + "px";
+      gid("title").style.color = "#ddd";
+      gid("subtitle").style.color = "#ddd";
+    };
+
+    const pts2 = () => {
+      gid("td").style.opacity = "1.0";
+      window.setTimeout(() => {
+        gid("sl").style.opacity = "1.0";
+        window.setTimeout(() => {
+          gid("an").style.opacity = "1.0";
+        }, 400);
+      }, 400);
+    }
+
+    const pts3 = () => {
+      document.body.style.backgroundColor = "rgb(12, 115, 169)";
+      st(() => {
+        document.body.style.backgroundColor = "#882288";
+        st(() => {
+          document.body.style.backgroundColor = "#cf5510";
+        }, 500);
+      }, 500);
+    };
+
+    const pts4 = () => {
+      gid("td").style.marginLeft = "200vw";
+      gid("an").style.marginLeft = "200vw";
+      gid("sl").style.marginRight = "200vw";
+    };
+
+    const pts5 = () => {
+      gid("td").style.display = "none";
+      gid("an").style.display = "none";
+      gid("sl").style.display = "none";
+      gid("box").style.display = "block";
+
+      st(() => {
+        gid("box").classList.add("show");
+      }, 50);
+    };
+
+    const pts6 = () => {
+      gid("hd").style.maxHeight = "0";
+    };
+
+    const pts7 = () => {
+      gid("nxt").style.maxHeight = "50vh";
+    };
+
+    const pts8 = () => {
+      gid("obo1").style.opacity = "1.0";
+
+      st(() => {
+        gid("obo2").style.opacity = "1.0";
+        st(() => {
+          gid("obo3").style.opacity = "1.0";
+        }, 400);
+      }, 400);
+    };
+
+    const pts9 = () => {
+      const rect = gid("box").getBoundingClientRect();
+      gid("box").style.position = "fixed";
+      gid("box").style.top = rect.top + "px";
+      gid("box").style.bottom = (window.innerHeight - rect.bottom) + "px";
+      gid("box").style.left = rect.left + "px";
+      gid("box").style.right = (window.innerWidth - rect.right) + "px";
+
+      st(() => {
+        gid("box").style.maxWidth = "unset";
+        gid("nxt").style.maxHeight = "0";
+
+        st(() => {
+          gid("box").style.top = "0";
+          gid("box").style.bottom = "0";
+          gid("box").style.left = "0";
+          gid("box").style.right = "0";
+
+          gid("box").style.pointerEvents = "none";
+          gid("sum").style.display = "block";
+        }, 50);
+      }, 50);
+    };
+
+    const pts10 = () => {
+      gid("sum").classList.add("show");
+    };
+
+    const pts11 = () => {
+      gid("scrdown").style.opacity = "1.0";
+      gid("scrdown").style.pointerEvents = "auto";
+
+      document.body.addEventListener("wheel", e => {
+        if (e.deltaY > 0) {
+          gid("box").classList.add("scrolled");
+          document.documentElement.style.overflowY = "auto";
+          document.body.style.overflowY = "auto";
+
+          st(() => {
+            gid("img").classList.add("unblur");
+          }, 500);
+        }
+      });
+    };
+
+    const pts = [
+      [pts1, 1000],
+      [pts2, 800],
+      [pts3, 2000],
+      [pts4, 550],
+      [pts5, 2500],
+      [pts6, 700],
+      [pts7, 900],
+      [pts8, 2000],
+      [pts9, 500],
+      [pts10, 300],
+      [pts11, 300]
+    ];
+    
+    window.addEventListener("load", init_and_run);
+    </script>
+  </head>
+  <body>
+    <section id="ct1">
+
+      <div id="slide-1">
+        <h1 id="title">Animations in CSS</h1>
+        <h3 id="subtitle">Spencer Colton + Sakke Overlund</h3>
+        <div id="canvas">
+          <h2 id="td" style="font-variant: small-caps;">Today,</h2>
+          <h2 id="sl">Sakke learned</h2>
+          <h2 id="an" style="text-transform: uppercase;">animations.</h2>
+
+          <div id="box">
+            <div id="hd">
+              On her website,
+              <br />
+              We animated some lines.
+            </div>
+            <div id="nxt">
+              We also made her menu buttons appear
+              <br />
+              <span id="obo1">one</span>
+              <span id="obo2">by</span>
+              <span id="obo3">one.</span>
+            </div>
+          </div>
+
+          <div id="sum">
+            We made a ton of progress and we're going to keep working on her site together :)
+          </div>
+
+          <div id="scrdown">
+            &darr;
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="ct2">
+      <div>
+        <img src="https://imgur.com/ufcBXOa.jpg" style="float: right; width: 30%; height: auto;" id="img" />
+        <h1 style="font-variant: small-caps;">Today, we:</h1>
+        <ul>
+          <li>Learned the basics of the CSS "animation" property.</li>
+          <li>Experimented with different types of CSS element <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/display">display</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/position">positioning</a> modes.</li>
+          <li>Used <a href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Pseudo-classes_and_pseudo-elements">pseudo-elements</a> to help our animations.</li>
+          <li>Implemented <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries">media queries</a> to make sure animations appear correctly on mobile.</li>
+        </ul>
+      </div>
+    </section>
+  </body>
+</html>
